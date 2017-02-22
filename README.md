@@ -11,4 +11,4 @@ cordova run android
 
 App Screenshot
 
-[![TerraTerm](www/img/screenshot.png)]
+[![TerraTerm](www/img/screenshot.jpg)]
