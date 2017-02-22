@@ -9,3 +9,6 @@ To build the project
 cordova run android
 ```
 
+App Screenshot
+
+[![TerraTerm](www/img/screenshot.png)]

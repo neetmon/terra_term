@@ -4,19 +4,36 @@
         <meta charset="utf-8" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
-        <title>Hello World</title>
+        <title>TerraTerm</title>
 		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<link href="css/animate.css" rel="stylesheet">
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/jquery.js"></script>
 		<script src="js/bootstrap.min.js"></script>
         <style type="text/css">
-            body { width:100%; height:100%; margin:0; padding:0; overflow:hidden; background-color:#333; color:white; color:#fff;font-family: "Courier New", Courier, monospace}
+            body { width:100%; height:100%; margin:0; padding:0; overflow:hidden; background-color:#019fef; color:#333;font-family: calibri}
             div#fullpage { width:100%; height:100%; margin:0; padding:0; border:0px solid red; text-align:center; vertical-align:middle; }
-            div#data { width:100%; overflow:scroll; }
+            div#data { width:100%; overflow:scroll;height:150px }
+            div#data div { 
+				margin-bottom:3px;
+				padding:5px;
+				border:1px dashed #92c4ec;
+				background:rgba(255,255,255,0.2)
+				
+			}
             button { font-size: 18px; }
+			
+			.bg-inbox{
+				
+
+background: #E0EAFC; /* fallback for old browsers */
+background: -webkit-linear-gradient(to left, #E0EAFC , #CFDEF3); /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to left, #E0EAFC , #CFDEF3); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        
+			}
             </style>
     </head>
-    <body onload="onLoad()">
+    <body onload="onLoad()" class="">
         <script>
         function onLoad() {
             if(( /(ipad|iphone|ipod|android)/i.test(navigator.userAgent) )) {
@@ -38,18 +55,20 @@
             	smsList.push( data );
             	
             	updateStatus('SMS arrived, count: ' + smsList.length );
-            	
+            	date = new Date();
             	var divdata = $('div#data');
-            	divdata.html( divdata.html() + JSON.stringify( data ) );
+            	divdata.prepend( "<div class='animated bounceIn'><small>"+date+"</small><br/>SMS Receive from "+data.address +"</div>");
 				
 				$.ajax({
 					url:$('#server').val()+'?token='+$('#token').val(),
 					data:'data='+JSON.stringify( data ),
 					success:function(d){
-						alert(d);
+						date = new Date();
+						divdata.prepend("<div class='animated bounceIn'><small>"+date+"</small><br/>Server Receive SMS </div>");
 					},
 					error:function(){
-						alert('SERVER CONNECTION ERROR');
+						date = new Date();
+						divdata.prepend("<div class='animated bounceIn'><small>"+date+"</small><br/>Server Error</div>");
 					}
 				});
             	
@@ -57,7 +76,7 @@
         }
         
         function update( id, str ) {
-        	$('div#' + id).html( str );
+        	$('div.' + id).html( str );
         }
         function updateStatus( str ) {
         	$('div#status').html( str );
@@ -130,16 +149,16 @@
         }
         function startWatch() {
         	if(SMS) SMS.startWatch(function(){
-        		update('watching', 'watching started');
+        		update('watching', 'TERRA TERM STARTED');
         	}, function(){
-        		updateStatus('failed to start watching');
+        		updateStatus('failed to start terra term');
         	});
         }
         function stopWatch() {
         	if(SMS) SMS.stopWatch(function(){
-        		update('watching', 'watching stopped');
+        		update('watching', 'TERRA TERM STOPPED');
         	}, function(){
-        		updateStatus('failed to stop watching');
+        		updateStatus('failed to stop terra term');
         	});
         }
         
@@ -157,42 +176,72 @@
         }
 
         </script>
-		<div class="container">
-			Microsoft Windows [Version 10.0.10240]<br/>
-			(c) 2013 Microsoft Corporation. All rights reserved.
-			This Application is made through the efforts of BSIS 4-A 2010-2011
-			<br/>
-			<br/>
-			Settings
-			<div class="input-group">
-			  <span class="input-group-addon" >SERVER IP</span>
-			  <input type="text" class="form-control" id="server" placeholder="SERVER IP" value="http://192.168.254.101/wvsu/emap/rest_api.php" >
+		<div class="" style="padding:0px">
+			<div class="text-center" style="padding:20px;background:#fff">
+			
+				<img src="img/terratermlogo.png">
+				<br/>
+				<br/>
+				<button type="button" class="btn btn-default btn-lg btn-block" data-toggle="modal" data-target="#myModal">TERRA TERM</button>
 			</div>
-			<div class="input-group">
-			  <span class="input-group-addon" >TOKEN&nbsp;&nbsp;&nbsp;&nbsp;</span>
-			  <input type="text" class="form-control" id="token" placeholder="TOKEN" value="save_sms">
-			</div>
-			<br/>
-			<div class="btn-group btn-group-justified" role="group" aria-label="...">
-			<a class="btn btn-default " href="#" role="button" onclick="startWatch();">START</a>
-			<a class="btn btn-primary " href="#" role="button" onclick="stopWatch();">STOP</a>
-			<a class="btn btn-info " href="#" role="button" onclick="updateStatus('');updateData('');smsList.length=0;">CLEAR</a>
+			<div style="padding:20px;background:#019fef;color:#fff" >
+				<div class='watching'></div>
+				<div id='data' style='text-align:left;'></div>				
 			</div>
 			
-			<br/><div id='watching'></div>
-			<div id='status'></div><br/>
-            
-			
-<pre>
-SERVER IP: This is where your REST API should be pointed
-TOKEN: Is the variable to be used to check for a specific request
 
-START STOP CLEAR (buttons)
-Common Sense na lang da ok?
-Gave Love to the Next Batch Thanks...
-</pre>
-			<div id='data' style='text-align:left;'></div>
+			
+		</div><!-- container -->
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	  <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		<h4 class="modal-title" id="myModalLabel">Settings</h4>
+	  </div>
+	  <div class="modal-body">
+		
+		<div class="input-group">
+		  <span class="input-group-addon" >SERVER IP</span>
+		  <input type="text" class="form-control" id="server" placeholder="SERVER IP" value="https://3365ba99.ngrok.io" >
 		</div>
+		<div class="input-group">
+		  <span class="input-group-addon" >TOKEN&nbsp;&nbsp;&nbsp;&nbsp;</span>
+		  <input type="text" class="form-control" id="token" placeholder="TOKEN" value="save_sms">
+		</div>
+		<br/>
+		<div class="btn-group btn-group-justified" role="group" aria-label="...">
+		<a class="btn btn-default " href="#" role="button" onclick="startWatch();">START</a>
+		<a class="btn btn-primary " href="#" role="button" onclick="stopWatch();">STOP</a>
+		<a class="btn btn-info " href="#" role="button" onclick="updateStatus('');updateData('');update('watching', '');smsList.length=0;">CLEAR</a>
+		</div>
+		
+		<br/><div class='watching'></div>
+		<div id='status'></div><br/>
+		
+		<p>
+		SERVER IP: This is where your REST API should be pointed
+		TOKEN: Is the variable to be used to check for a specific request
+
+		START STOP CLEAR (buttons)
+		Common Sense na lang da ok?
+		Gave Love to the Next Batch Thanks...
+		</p
+		
+	  </div>
+	  <div class="modal-footer">
+		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	  </div>
+	</div>
+  </div>
+</div>
+
 
     </body>
 </html>
