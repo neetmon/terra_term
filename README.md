@@ -10,7 +10,7 @@ cordova run android
 ```
 
 <style>
-	.img{
-		width:250px
+	img[alt="TerraTerm"] { 
+	  width:  250px; 
 	}
 </style>
